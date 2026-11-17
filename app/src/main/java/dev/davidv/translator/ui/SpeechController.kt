@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.UUID
 
 enum class SpeechTarget { INPUT, OUTPUT }
 
@@ -153,7 +154,7 @@ class SpeechController(
                   check(directory.isDirectory || directory.mkdirs()) { "Unable to create audio cache directory" }
                   File(
                     directory,
-                    "offline-translator-${language.code}-${System.currentTimeMillis()}.m4a",
+                    "offline-translator-${language.code}-${UUID.randomUUID()}.m4a",
                   ).also { writeM4a(it, audio) }
                 }
               } catch (e: CancellationException) {

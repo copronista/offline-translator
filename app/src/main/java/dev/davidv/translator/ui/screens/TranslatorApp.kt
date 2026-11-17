@@ -105,8 +105,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.UUID
 import kotlin.math.roundToInt
 
 private fun defaultVoiceNameForLanguage(packs: List<uniffi.translator_core.InstalledTtsPack>): String? =
@@ -211,10 +210,7 @@ suspend fun saveImage(
     var uri: Uri? = null
     try {
       imagesFolder.mkdirs()
-      val date = Date()
-      val sdf = SimpleDateFormat("yyyyMMdd-hhmmss")
-      val dateString = sdf.format(date)
-      val fileName = "shared_image-" + dateString + ".jpg"
+      val fileName = "shared_image-${UUID.randomUUID()}.jpg"
       val file = File(imagesFolder, fileName)
 
       val stream = FileOutputStream(file)
