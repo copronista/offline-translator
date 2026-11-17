@@ -30,6 +30,7 @@ import dev.davidv.translator.TranslationCoordinator
 import dev.davidv.translator.concatenatePcmAudio
 import dev.davidv.translator.localizedName
 import dev.davidv.translator.writeWav
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
