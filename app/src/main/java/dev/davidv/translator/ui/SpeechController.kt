@@ -47,7 +47,19 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.math.BigInteger
 import java.util.UUID
+
+private const val AUDIO_SUFFIX_LENGTH = 12
+private const val BASE36_RADIX = 36
+
+private fun audioFileSuffix(): String {
+  val hex = UUID.randomUUID().toString().replace("-", "")
+  return BigInteger(hex, 16)
+    .toString(BASE36_RADIX)
+    .padStart(AUDIO_SUFFIX_LENGTH, '0')
+    .takeLast(AUDIO_SUFFIX_LENGTH)
+}
 
 enum class SpeechTarget { INPUT, OUTPUT }
 
@@ -154,7 +166,7 @@ class SpeechController(
                   check(directory.isDirectory || directory.mkdirs()) { "Unable to create audio cache directory" }
                   File(
                     directory,
-                    "offline-translator-${language.code}-${UUID.randomUUID()}.m4a",
+                    "offline-translator-${language.code}-${audioFileSuffix()}.m4a",
                   ).also { writeM4a(it, audio) }
                 }
               } catch (e: CancellationException) {
