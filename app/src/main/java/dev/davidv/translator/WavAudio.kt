@@ -18,8 +18,6 @@
 package dev.davidv.translator
 
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.io.OutputStream
 
 private const val WAV_HEADER_BYTES = 44
@@ -48,16 +46,6 @@ fun encodeWav(audio: PcmAudio): ByteArray {
   val output = ByteArrayOutputStream(wavSize(audio))
   writeWav(output, audio)
   return output.toByteArray()
-}
-
-fun writeWav(
-  file: File,
-  audio: PcmAudio,
-) {
-  file.parentFile?.mkdirs()
-  FileOutputStream(file).buffered().use { output ->
-    writeWav(output, audio)
-  }
 }
 
 private fun wavSize(audio: PcmAudio): Int {

@@ -29,7 +29,7 @@ import dev.davidv.translator.SpeechSynthesisResult
 import dev.davidv.translator.TranslationCoordinator
 import dev.davidv.translator.concatenatePcmAudio
 import dev.davidv.translator.localizedName
-import dev.davidv.translator.writeWav
+import dev.davidv.translator.writeM4a
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -153,8 +153,8 @@ class SpeechController(
                   check(directory.isDirectory || directory.mkdirs()) { "Unable to create audio cache directory" }
                   File(
                     directory,
-                    "offline-translator-${language.code}-${System.currentTimeMillis()}.wav",
-                  ).also { writeWav(it, audio) }
+                    "offline-translator-${language.code}-${System.currentTimeMillis()}.m4a",
+                  ).also { writeM4a(it, audio) }
                 }
               } catch (e: CancellationException) {
                 throw e
