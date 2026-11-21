@@ -779,8 +779,12 @@ fun TranslatorApp(
                     },
                     onSpeakInput = { text, language -> viewModel.speech.speak(text, language, SpeechTarget.INPUT) },
                     onSpeakOutput = { text, language -> viewModel.speech.speak(text, language, SpeechTarget.OUTPUT) },
-                    onShareInput = { text, language -> viewModel.speech.share(text, language, SpeechTarget.INPUT) },
-                    onShareOutput = { text, language -> viewModel.speech.share(text, language, SpeechTarget.OUTPUT) },
+                    onShareInput = { text, language, fileName ->
+                      viewModel.speech.share(text, language, SpeechTarget.INPUT, fileName)
+                    },
+                    onShareOutput = { text, language, fileName ->
+                      viewModel.speech.share(text, language, SpeechTarget.OUTPUT, fileName)
+                    },
                     launchMode = currentLaunchMode,
                     pendingSharedImage = viewModel.pendingSharedImage,
                     isAutoSource = isAutoSource,

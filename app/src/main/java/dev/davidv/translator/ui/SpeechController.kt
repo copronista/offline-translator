@@ -52,6 +52,9 @@ import java.util.UUID
 
 private const val AUDIO_SUFFIX_LENGTH = 12
 private const val BASE36_RADIX = 36
+private const val AUDIO_EXTENSION = ".m4a"
+private const val MAX_SHARED_FILE_NAME_LENGTH = 100
+private val INVALID_FILE_NAME_CHARS = setOf('/', '\\', ':', '*', '?', '"', '<', '>', '|')
 
 private fun audioFileSuffix(): String {
   val hex = UUID.randomUUID().toString().replace("-", "")
@@ -59,6 +62,23 @@ private fun audioFileSuffix(): String {
     .toString(BASE36_RADIX)
     .padStart(AUDIO_SUFFIX_LENGTH, '0')
     .takeLast(AUDIO_SUFFIX_LENGTH)
+}
+
+private fun sharedAudioFileName(
+  requestedName: String,
+  languageCode: String,
+): String {
+  val name = requestedName.trim()
+  val invalid =
+    name.isEmpty() ||
+      name == "." ||
+      name == ".." ||
+      name.length > MAX_SHARED_FILE_NAME_LENGTH ||
+      name.any { it in INVALID_FILE_NAME_CHARS || it.isISOControl() }
+  if (invalid) {
+    return "offline-translator-$languageCode-${audioFileSuffix()}$AUDIO_EXTENSION"
+  }
+  return if (name.endsWith(AUDIO_EXTENSION, ignoreCase = true)) name else name + AUDIO_EXTENSION
 }
 
 enum class SpeechTarget { INPUT, OUTPUT }
@@ -148,6 +168,7 @@ class SpeechController(
     text: String,
     language: Language,
     target: SpeechTarget,
+    requestedFileName: String = "",
   ) {
     speechJob?.cancel()
     audioPlayer.stop()
@@ -166,7 +187,7 @@ class SpeechController(
                   check(directory.isDirectory || directory.mkdirs()) { "Unable to create audio cache directory" }
                   File(
                     directory,
-                    "offline-translator-${language.code}-${audioFileSuffix()}.m4a",
+                    sharedAudioFileName(requestedFileName, language.code),
                   ).also { writeM4a(it, audio) }
                 }
               } catch (e: CancellationException) {
