@@ -41,6 +41,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -96,7 +97,7 @@ fun TranslationField(
   selectedVoiceName: String? = null,
   availableVoices: List<uniffi.translator_core.InstalledTtsPack> = emptyList(),
   onSpeak: () -> Unit = {},
-  onShare: () -> Unit = {},
+  onShare: (String) -> Unit = {},
   onSpeechPlaybackSpeedChange: (Float) -> Unit = {},
   onVoiceSelected: (String, String) -> Unit = { _, _ -> },
 ) {
@@ -262,13 +263,14 @@ fun SpeechPlaybackButton(
   selectedVoiceName: String?,
   availableVoices: List<uniffi.translator_core.InstalledTtsPack>,
   onSpeak: () -> Unit,
-  onShare: () -> Unit,
+  onShare: (String) -> Unit,
   onSpeechPlaybackSpeedChange: (Float) -> Unit,
   onVoiceSelected: (String, String) -> Unit,
   contentDescription: String,
   modifier: Modifier = Modifier,
 ) {
   var showSpeechOptions by remember { mutableStateOf(false) }
+  var shareFileName by remember { mutableStateOf("") }
   val active = isAudioPlaying || isAudioLoading
   val tint =
     if (active) {
@@ -396,10 +398,18 @@ fun SpeechPlaybackButton(
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
+        OutlinedTextField(
+          value = shareFileName,
+          onValueChange = { shareFileName = it },
+          label = { Text(text = stringResource(R.string.tts_share_file_name)) },
+          singleLine = true,
+          modifier = Modifier.fillMaxWidth(),
+        )
+
         TextButton(
           onClick = {
             showSpeechOptions = false
-            onShare()
+            onShare(shareFileName)
           },
           modifier = Modifier.fillMaxWidth(),
         ) {

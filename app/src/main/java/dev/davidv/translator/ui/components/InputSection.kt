@@ -66,7 +66,7 @@ fun InputSection(
   onSourceTtsPlaybackSpeedChange: (Float) -> Unit,
   onSourceTtsVoiceSelected: (String, String) -> Unit,
   onSpeakInput: (String, Language) -> Unit,
-  onShareInput: (String, Language) -> Unit = { _, _ -> },
+  onShareInput: (String, Language, String) -> Unit = { _, _, _ -> },
   onStopAudio: () -> Unit,
   showSourceRow: Boolean,
   sourceActions: ImageSourceActions,
@@ -111,7 +111,7 @@ fun InputSection(
               onSpeakInput(input, from)
             }
           },
-          onShare = { onShareInput(input, from) },
+          onShare = { fileName -> onShareInput(input, from, fileName) },
           onSpeechPlaybackSpeedChange = onSourceTtsPlaybackSpeedChange,
           onVoiceSelected = onSourceTtsVoiceSelected,
           contentDescription =

@@ -163,8 +163,8 @@ fun MainScreen(
   onTtsVoiceSelected: (String, String) -> Unit = { _, _ -> },
   onSpeakInput: (String, Language) -> Unit = { _, _ -> },
   onSpeakOutput: (String, Language) -> Unit = { _, _ -> },
-  onShareInput: (String, Language) -> Unit = { _, _ -> },
-  onShareOutput: (String, Language) -> Unit = { _, _ -> },
+  onShareInput: (String, Language, String) -> Unit = { _, _, _ -> },
+  onShareOutput: (String, Language, String) -> Unit = { _, _, _ -> },
   launchMode: LaunchMode,
   pendingSharedImage: SharedFlow<android.net.Uri>? = null,
   isAutoSource: Boolean = false,
@@ -617,9 +617,9 @@ fun MainScreen(
                       }
                     }
                   },
-                  onShare = {
+                  onShare = { fileName ->
                     output?.translated?.takeIf { it.isNotBlank() }?.let { translatedText ->
-                      onShareOutput(translatedText, to)
+                      onShareOutput(translatedText, to, fileName)
                     }
                   },
                   onSpeechPlaybackSpeedChange = onTtsPlaybackSpeedChange,
